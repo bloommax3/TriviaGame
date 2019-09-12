@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Max's Movie Trivia</title>
+</head>
+<body>
+    <!--Write divs to call to with Java-->
+    <div class="container">
+        <div id="timer"></div>
+        <div class="question-screen">
+            <h1>
+                Max's Movie Trivia
+            </h1>
+        </div>
+        <div class="answer-screen row">
+            <p>
+                Test your knowledge of movies with these 4 questions!
+            </p>
+        </div>
+        <div class="button">
+            <button id="start">Click here to get started</button>
+        </div>
+    </div>
+
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        
+var question1 = "Which film is the first movie to win Best Picture, Best Actor, Best Actress, Best Director, and Best Screenplay at the Oscars?"
+var answers1 = ["Silence of the Lambs", "It Happened One Night", "Citizen Kane", "Moonlight"];
+var question2 = "Which movie has the highest grossing unadjusted box office of all time?"
+var answers2 = ["Avengers: Infinity War", "Star Wars: The Force Awakens", "Avatar", "Avengers: Endgame"];
+var question3 = "What is the first film directed by Martin Scorsese and starring both Robert De Niro and Joe Pesci?"
+var answers3 = ["Raging Bull", "Casino", "The Irishman", "Goodfellas"]
+var question4 = "Which film is regarded as the first feature film?"
+var answers4 = ["Napoleon", "Le Voyage dans la Lune", "Birth of a Nation", "Intollerance"]
+var questions = [question1, question2, question3, question4]
+var answers = [answers1, answers2, answers3, answers4]
+var count
+var currentQuestion
+var correct
+var incorrect
+var questionAnswered = true
+
+
+
+        // set the object values
+        count = 30,
+        currentQuestion = 0,
+        correct = 0,
+        incorrect = 0,
+        // Countdown function
+        function countDown() {
+             // decrement counter
+            // display counter in on page
+            // run timer function
+            setInterval(function(){
+                count--
+                $("#timer").text(count)
+            },1000)
+        }
+        // loadQuestion: function
+         function loadQuestion() {
+            reset()
+            // add question dynamically
+            let a = "<div>"
+            let b = "<p>"
+            $(a).addClass("row")
+            $(b).text("<h1>"+questions[currentQuestion]+"</h1>")
+            $(a).append(b)
+            $(".question-screen").append(a)
+            // for loop to go through answers
+            for(var i=0; i<4; i++){
+                var temp = answers[currentQuestion]
+                let s = "<p>"+temp[i]+"</p>"
+                $(s).addClass(i)
+                $(".answer-screen").append(s)
+            }
+            if(currentQuestion===0){
+                $(answers1[1]).on("click",answerCorrect())
+            }
+            else if(currentQuestion===1){
+                $(answers2[3]).on("click",answerCorrect())
+            }
+            else if(currentQuestion===2){
+                $(answers3[0]).on("click",answerCorrect())
+            }
+            if(currentQuestion===3){
+                $(answers[4]).on("click",answerCorrect())
+            }
+
+        }
+            
+        // nextQuestion: function
+        function nextQuestion() {
+            // set countdown
+            count = 30;
+            countDown()
+            // display counter
+            // increment currentQuestion
+            currentQuestion++
+            //run loadQuestion function
+            loadQuestion()
+        }
+            
+        // timeUp: function
+        function timeUp() {
+            // clearInterval
+            clearInterval(countdown)
+            
+            // display on page
+            $(".answer-screen").empty()
+            $(".question-screen").empty()
+            $(".question-screen").text("<h1>Time's Up! You Lose</h1>")
+            $(".answer-screen").text("<p>You had one job and you failed.</p>")
+            // conditional - if your in current question or next question
+        }
+            
+        // results: function
+        function results() {
+            // clear interval
+            clearInterval(countDown)
+            // display results
+            $(".question-screen").append("You finished!")
+            if(correct===0){
+                $(".answer-screen").append("You did terribly! 0/4. Better get studying!")
+            }
+            if(correct===1){
+                $(".answer-screen").append("You didn't do as badly as you could have. I guess that's a positive. 1/4. Go watch some movies!")
+            }
+            if(correct===2){
+                $(".answer-screen").append("Eh. Could be better, could be worse. 2/4. Get back to work.")
+            }
+            if(correct===3){
+                $(".answer-screen").append("You didn't suck. 3/4. Good job!")
+            }
+            if(correct===4){
+                $(".answer-screen").append("Wow! You're a wizard! 4/4. Great job!")
+            }
+        }
+    
+        // answerInCorrectly: function
+        function answerInCorrectly () {
+            // increment incorrect
+            incorrect++
+            // display the right answer
+            $("#question-screen").append("<h1>Wrong!</h1>")
+            if(currentQuestion===0){
+                $("#answer-screen").append("The correct answer is: "+answers1[1])
+            }
+            if(currentQuestion===1){
+                $("#answer-screen").append("The correct answer is: "+answers2[3])
+            }
+            if(currentQuestion===2){
+                $("#answer-screen").append("The correct answer is: "+answers3[0])
+            }
+            if(currentQuestion===3){
+                $("#answer-screen").append("The correct answer is: "+answers4[2])
+            }
+            var nextQuestionButton = "<button>Next Question</button>"
+            $(".button").append(nextQuestionButton)
+            // condition to either go to results or go to next question
+            if(currentQuestion<3){
+                $(".button").on("click", function(){
+                     nextQuestion()})
+            }
+            else{
+                $(".button").on("click", results())
+            }
+        }
+            
+        // answeredCorrect: function
+        function answerCorrect () {
+            // increment correct
+            correct++
+            // display that they are correct
+            $("#question-screen").append("<h1>Correct!</h1>")
+            if(currentQuestion===0){
+                $("#answer-screen").append("The correct answer is: "+answers1[1])
+            }
+            if(currentQuestion===1){
+                $("#answer-screen").append("The correct answer is: "+answers2[3])
+            }
+            if(currentQuestion===2){
+                $("#answer-screen").append("The correct answer is: "+answers3[0])
+            }
+            if(currentQuestion===3){
+                $("#answer-screen").append("The correct answer is: "+answers4[2])
+            }
+            var nextQuestionButton = "<button>Next Question</button>"
+            $(".button").append(nextQuestionButton)
+            // condition to either go to results or go to next question
+            if(currentQuestion<3){
+                $(".button").on("click", function(){
+                     nextQuestion()})
+            }
+            else{
+                $(".button").on("click", results())
+            }
+
+        }
+            
+        // reset: function
+        function reset () {
+            $(".question-screen").empty()
+            $(".answer-screen").empty()
+            $(".button").empty()
+        }
+        // Click events
+            //$(document).on("click") that calls the game function
+
+            //$(document).on("click") that calls the clicked function
+            //$(document).on("click") that calls the loadQuestion function
+        
+
+$(".start").on("click", loadQuestion())
+
+
+    </script>
+</body>
+</html>
